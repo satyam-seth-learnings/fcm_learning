@@ -1,9 +1,14 @@
 import json
 from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
-
+from django.middleware.csrf import get_token
 from core.fcm import send_dummy_message_to_token
+
+
+def csrf_token(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})
+
 
 def send_message(request: HttpRequest) -> JsonResponse:
     # TODO: use stored fcm token from model
@@ -17,8 +22,7 @@ def send_message(request: HttpRequest) -> JsonResponse:
 
     return JsonResponse({"status": "token missing"}, status=400)
 
-# TODO: Remove it, client must send csrf token in post request
-@csrf_exempt
+
 @require_http_methods(['POST'])
 def save_token(request: HttpRequest) -> JsonResponse:
     try:
