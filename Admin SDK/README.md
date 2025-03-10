@@ -1,0 +1,1 @@
+- [Understand Firebase projects](https://firebase.google.com/docs/projects/learn-more)
