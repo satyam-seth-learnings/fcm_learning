@@ -7,12 +7,15 @@ export default class DemoMessaging {
 
     messaging: Messaging;
 
+    csrfToken: string;
+
     token?: string;
 
     tokenSaved: boolean = false;
 
-    constructor(firebaseApp: FirebaseApp, vapidKey: string) {
+    constructor(firebaseApp: FirebaseApp, vapidKey: string, csrfToken: string) {
         this.vapidKey = vapidKey;
+        this.csrfToken = csrfToken;
 
         // Initialize Firebase Cloud Messaging and get a reference to the service
         this.messaging = getMessaging(firebaseApp);
@@ -25,8 +28,8 @@ export default class DemoMessaging {
             if (currentToken) {
                 // Send the token to your server and update the UI if necessary
                 // ...
-                this.token = currentToken
-                console.log('current token -> ', this.token)
+                this.token = currentToken;
+                console.log('current token -> ', this.token);
                 this.sendTokenToServer();
             } else {
                 // Show permission request UI
@@ -44,16 +47,21 @@ export default class DemoMessaging {
             `${import.meta.env.VITE_BACKEND_ROOT}fcm/save-token/`,
             {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': this.csrfToken,
+                },
+                credentials: 'include',
                 body: JSON.stringify({ fcm_token: this.token })
             }
         ).then(res => {
             if (res.status === 200) {
                 this.tokenSaved = true;
             } else {
-                console.log('Unable to set token to backend', res.status)
+                console.log('Unable to set token to backend', res.status);
             }
         }).catch(err => {
-            console.log('error while sending token to backend', err)
+            console.log('error while sending token to backend', err);
         });
     }
 
