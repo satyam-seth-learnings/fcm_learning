@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# service account creadential json file path
+export GOOGLE_APPLICATION_CREDENTIALS=""
+
+# frontend server
+export CORS_ALLOWED_ORIGINS="http://127.0.0.1:5173"
+
+python3 manage.py runserver
