@@ -23,3 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# FCM (this file is only used for dev mode purposes)
+public/firebase-messaging-sw.js
