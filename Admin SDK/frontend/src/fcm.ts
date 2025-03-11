@@ -1,4 +1,4 @@
-import { getMessaging, getToken, Messaging, onMessage } from "firebase/messaging";
+import { getMessaging, getToken, MessagePayload, Messaging, onMessage } from "firebase/messaging";
 import { FirebaseApp } from "firebase/app";
 
 export default class DemoMessaging {
@@ -67,9 +67,25 @@ export default class DemoMessaging {
 
     registerMessageHandler() {
         console.log('Registering onMessage handler...');
-        onMessage(this.messaging, (payload: unknown) => {
+        onMessage(this.messaging, (payload: MessagePayload) => {
             console.log('Message received. ', payload);
-            // ...
+
+            // show notification
+            this.showNotification(payload.notification!.title!, payload.notification!.body!);
         });
     }
-} 
+
+    showNotification(title: string, body: string) {
+        const notification = new Notification(
+            title,
+            {
+                body,
+                requireInteraction: true,
+            }
+        );
+        notification.addEventListener('click', () => {
+            window.parent.focus();
+            notification.close();
+        });
+    }
+}
