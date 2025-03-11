@@ -16,7 +16,7 @@ def send_dummy_message_to_token(registration_token: str) -> None:
         ),
         webpush=messaging.WebpushConfig(
             fcm_options=messaging.WebpushFCMOptions(
-                link='https://chatgpt.com/'
+                link='https://example.com/'
             )
         )
     )
